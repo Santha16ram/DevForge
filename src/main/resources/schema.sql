@@ -1,0 +1,35 @@
+-- MySQL-style DDL. Same file is used by JDBC against MySQL
+-- and against H2 with MODE=MySQL.
+
+CREATE TABLE IF NOT EXISTS projects (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    project_key VARCHAR(10) NOT NULL UNIQUE,
+    title VARCHAR(80) NOT NULL,
+    owner_name VARCHAR(60) NOT NULL,
+    owner_email VARCHAR(80) NOT NULL,
+    summary VARCHAR(240) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS tasks (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    project_id BIGINT NOT NULL,
+    title VARCHAR(80) NOT NULL,
+    assignee VARCHAR(60) NOT NULL,
+    status VARCHAR(16) NOT NULL,
+    priority VARCHAR(12) NOT NULL,
+    notes VARCHAR(240),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_tasks_project FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS snippets (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    project_id BIGINT NOT NULL,
+    title VARCHAR(80) NOT NULL,
+    language VARCHAR(24) NOT NULL,
+    tags VARCHAR(120) NOT NULL,
+    body TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_snippets_project FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+);
